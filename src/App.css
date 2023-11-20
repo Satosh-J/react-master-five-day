@@ -1,0 +1,60 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.table-editable {
+  position: relative;
+
+  .glyphicon {
+    font-size: 20px;
+  }
+}
+
+/* UserRow.css */
+.editing input {
+  width: 100%; /* Ensure the input fields take up the full width of the table cell */
+  box-sizing: border-box; /* Include padding and border in the width calculation */
+  padding: 5px; /* Add some padding for better appearance */
+  margin: 0; /* Remove margin to ensure no extra spacing */
+  border: 1px solid #ccc; /* Add a border for a clean look */
+  border-radius: 3px; /* Add a slight border radius for a rounded appearance */
+}
