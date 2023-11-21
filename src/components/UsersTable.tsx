@@ -20,17 +20,17 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
   return (
     <div>
       <h1>Users</h1>
-      <p>This component illustrates the utilization of component props in the React</p>
-      <table
-      >
-        <thead>
+      <input type="text" className="search-input" placeholder="Search for names.." title="Type in a name" />
+
+      <table>
+        <thead className="header">
           <tr>
-            <td>No</td>
-            <td>First Name</td>
-            <td>Last Name</td>
-            <td>Email</td>
-            <td>Phone</td>
-            <td colSpan={2}>Actions</td>
+            <th>No</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th colSpan={2}>Actions</th>
           </tr>
         </thead>
         <tbody>

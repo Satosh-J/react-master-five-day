@@ -83,7 +83,7 @@ td,
 th {
   border: 1px solid #cccccc;
   text-align: left;
-  padding: 8px;
+  padding: 10px;
 }
 
 tr:nth-child(even) {
