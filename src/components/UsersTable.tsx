@@ -1,6 +1,6 @@
 // UsersTable.tsx
 
-import { FC } from "react";
+import { FC, useState, useEffect } from "react";
 import UserRow from "./UserRow";
 
 interface UsersTableProps {
@@ -10,6 +10,8 @@ interface UsersTableProps {
 
 const UsersTable: FC<UsersTableProps> = ({ users }) => {
 
+  const [filter, setFilter] = useState('');
+
   const handleDelete = (id: ID) => {
     console.log('Delete: ', id)
   }
@@ -17,10 +19,43 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
   const handleEdit = (id: ID) => {
     console.log('Edit: ', id)
   }
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    // Simulating asynchronous data fetching
+    const fetchData = async () => {
+      try {
+        // Simulated API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Filtering logic (simulated API response)
+        const filteredData = users.filter((user) => {
+          return Object.values(user).some((value) =>
+            value.toString().toLowerCase().includes(filter.toLowerCase())
+          );
+        });
+
+        // Update state with filtered data
+        setFilteredUsers(filteredData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // Call fetchData when the filter or users change
+    fetchData();
+  }, [filter, users]);
+
   return (
     <div>
       <h1>Users</h1>
-      <input type="text" className="search-input" placeholder="Search for names.." title="Type in a name" />
+      <input type="text"
+        value={filter}
+        className="search-input"
+        placeholder="Search for names.."
+        title="Type in a name"
+        onChange={(e) => setFilter(e.target.value)}
+      />
 
       <table>
         <thead className="header">
@@ -34,7 +69,7 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map((user) => (
+          {filteredUsers.map((user) => (
             <UserRow
               key={user.id}
               user={user}
