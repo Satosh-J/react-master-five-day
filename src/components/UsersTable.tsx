@@ -2,6 +2,7 @@
 
 import { FC, useState, useEffect } from "react";
 import UserRow from "./UserRow";
+import styles from './UsersTable.module.css';
 
 interface UsersTableProps {
   users: User[]
@@ -51,14 +52,14 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
       <h1>Users</h1>
       <input type="text"
         value={filter}
-        className="search-input"
+        className={styles.searchInput}
         placeholder="Search for names.."
         title="Type in a name"
         onChange={(e) => setFilter(e.target.value)}
       />
 
       <table>
-        <thead className="header">
+        <thead>
           <tr>
             <th>No</th>
             <th>First Name</th>

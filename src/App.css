@@ -11,9 +11,11 @@
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -22,6 +24,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -42,49 +45,6 @@
 }
 
 
-/* UserRow.css */
-.editings input {
-  width: 100%; /* Ensure the input fields take up the full width of the table cell */
-  box-sizing: border-box; /* Include padding and border in the width calculation */
-  padding: 5px; /* Add some padding for better appearance */
-  margin: 0; /* Remove margin to ensure no extra spacing */
-  border: 1px solid #ccc; /* Add a border for a clean look */
-  border-radius: 3px; /* Add a slight border radius for a rounded appearance */
-}
-.editing input {
-  width: 100%;
-  font-size: 16px;
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-
-.search-input {
-  width: 100%;
-  font-size: 16px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  margin-bottom: 5px;
-}
-
 * {
   box-sizing: border-box;
-}
-
-
-/* Styles for table */
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td,
-th {
-  border: 1px solid #cccccc;
-  text-align: left;
-  padding: 10px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
 }
