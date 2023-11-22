@@ -52,7 +52,13 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
 
     return (
         <tr key={user.id}>
-            <td>{user.id}</td>
+            <td
+                style={{
+                    border: '1px solid #cccccc',
+                    textAlign: 'left',
+                    padding: '10px'
+                }}
+            >{user.id}</td>
             {editableFields.map((field) => (
                 <EditableTableCell
                     key={field}
@@ -62,7 +68,13 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
                     value={editedUser[field as keyof object]}
                 />
             ))}
-            <td>
+            <td
+                style={{
+                    border: '1px solid #cccccc',
+                    textAlign: 'left',
+                    padding: '10px'
+                }}
+            >
                 {
                     isEditing ?
                         <button onClick={handleCancel}>
@@ -73,7 +85,13 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
                         </button>
                 }
             </td>
-            <td>
+            <td
+                style={{
+                    border: '1px solid #cccccc',
+                    textAlign: 'left',
+                    padding: '10px'
+                }}
+            >
                 {
                     isEditing ?
                         <button onClick={handleSave}>Save</button> :
