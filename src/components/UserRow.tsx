@@ -53,11 +53,6 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
     return (
         <tr key={user.id}>
             <td
-                style={{
-                    border: '1px solid #cccccc',
-                    textAlign: 'left',
-                    padding: '10px'
-                }}
             >{user.id}</td>
             {editableFields.map((field) => (
                 <EditableTableCell
@@ -69,33 +64,31 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
                 />
             ))}
             <td
-                style={{
-                    border: '1px solid #cccccc',
-                    textAlign: 'left',
-                    padding: '10px'
-                }}
             >
                 {
                     isEditing ?
-                        <button onClick={handleCancel}>
+                        <button onClick={handleCancel}
+                            className="btn btn-secondary"
+                        >
                             Cancel
                         </button> :
-                        <button onClick={handleEdit}>
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleEdit}>
                             Edit
                         </button>
                 }
             </td>
             <td
-                style={{
-                    border: '1px solid #cccccc',
-                    textAlign: 'left',
-                    padding: '10px'
-                }}
             >
                 {
                     isEditing ?
-                        <button onClick={handleSave}>Save</button> :
-                        <button onClick={() => onDelete(user.id)}>Delete</button>
+                        <button onClick={handleSave}
+                            className="btn btn-primary"
+                        >Save</button> :
+                        <button onClick={() => onDelete(user.id)}
+                            className="btn btn-danger"
+                        >Delete</button>
                 }
             </td>
         </tr >

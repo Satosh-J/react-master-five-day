@@ -1,7 +1,7 @@
 // UsersTable.tsx
+
 import { FC, useState, useEffect } from "react";
 import UserRow from "./UserRow";
-// import styles from './UsersTable.module.css';
 
 interface UsersTableProps {
   users: User[]
@@ -47,97 +47,25 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
   }, [filter, users]);
 
   return (
-    <div
-    //   css={css`
-    //   table {
-    //       font-family: arial, sans-serif;
-    //       border-collapse: collapse;
-    //       width: 100%;
-    //   }
-
-    //   td,
-    //   th {
-    //       border: 1px solid #cccccc;
-    //       text-align: left;
-    //       padding: 10px;
-    //   }
-
-      // tr:nth-child(even) {
-      //     background-color: #dddddd;
-      // }
-    // `}
-    >
+    <div>
       <h1>Users</h1>
       <input type="text"
         value={filter}
-        style={{
-          width: '100%',
-          fontSize: '16px',
-          padding: '10px',
-          border: '1px solid #ddd',
-          marginBottom: '5px'
-        }}
-        // className={styles.searchInput}
+        className="form-control my-2"
         placeholder="Search for names.."
         title="Type in a name"
         onChange={(e) => setFilter(e.target.value)}
       />
 
-      <table
-        style={{
-          fontFamily: 'arial, sans-serif',
-          borderCollapse: 'collapse',
-          width: '100%'
-        }}
-      >
+      <table className="table table-striped table-bordered">
         <thead>
-          <tr
-          style={{
-
-          }}
-          >
-            <th
-              style={{
-                border: '1px solid #cccccc',
-                textAlign: 'left',
-                padding: '10px'
-              }}
-            >No</th>
-            <th
-              style={{
-                border: '1px solid #cccccc',
-                textAlign: 'left',
-                padding: '10px'
-              }}
-            >First Name</th>
-            <th
-              style={{
-                border: '1px solid #cccccc',
-                textAlign: 'left',
-                padding: '10px'
-              }}
-            >Last Name</th>
-            <th
-              style={{
-                border: '1px solid #cccccc',
-                textAlign: 'left',
-                padding: '10px'
-              }}
-            >Email</th>
-            <th
-              style={{
-                border: '1px solid #cccccc',
-                textAlign: 'left',
-                padding: '10px'
-              }}
-            >Phone</th>
-            <th
-              style={{
-                border: '1px solid #cccccc',
-                textAlign: 'left',
-                padding: '10px'
-              }}
-              colSpan={2}>Actions</th>
+          <tr>
+            <th>No</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th colSpan={2}>Actions</th>
           </tr>
         </thead>
         <tbody>
