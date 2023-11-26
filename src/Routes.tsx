@@ -6,13 +6,19 @@ import { WelcomePage } from './pages/Welcome';
 import App from './App';
 import UsersPage from './pages/Users';
 import AboutPage from './pages/About';
+import { ErrorPage } from './pages/Error';
 
 const router = createBrowserRouter([
 
     {
         path: '/',
         element: <App />,
+        errorElement: <ErrorPage />,
         children: [
+            {
+                index: true,
+                element: <WelcomePage />,
+            },
             {
                 path: 'welcome',
                 element: <WelcomePage />,
