@@ -5,10 +5,11 @@ import UserRow from "./UserRow";
 
 interface UsersTableProps {
   users: User[]
+  onUserSelect: (user: User) => void
 }
 
 
-const UsersTable: FC<UsersTableProps> = ({ users }) => {
+const UsersTable: FC<UsersTableProps> = ({ users, onUserSelect }) => {
 
   const [filter, setFilter] = useState('');
 
@@ -71,6 +72,7 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
         <tbody>
           {filteredUsers.map((user) => (
             <UserRow
+              onRowSelect={onUserSelect}
               key={user.id}
               user={user}
               onEdit={() => handleEdit(user.id)}

@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import UserProfile from "../components/UserProfile"
 import UsersTable from "../components/UsersTable"
 
 const users = [
@@ -26,10 +28,25 @@ const users = [
 
 function UsersPage() {
 
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+
+  const handleUserSelect = (user: User) => {
+    setSelectedUser(user)
+  }
+
   return (
+    <>
       <UsersTable
         users={users}
+        onUserSelect={handleUserSelect}
       />
+      {
+        selectedUser &&
+        <UserProfile
+          user={selectedUser}
+        />
+      }
+    </>
   )
 }
 
