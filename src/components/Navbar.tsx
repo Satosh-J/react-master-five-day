@@ -22,6 +22,14 @@ export const NavBar = () => {
                             children='Users'
                         />
                     </li>
+                    <li className="nav-item"
+                    >
+                        <NavLink
+                            className={({ isActive }) => { return `nav-link ${isActive && 'active'}` }}
+                            to="/admin"
+                            children='Admin'
+                        />
+                    </li>
                     <li className="nav-item">
                         <NavLink
                             className={({ isActive }) => { return `nav-link ${isActive && 'active'}` }}

@@ -7,6 +7,8 @@ import App from './App';
 import UsersPage from './pages/Users';
 import AboutPage from './pages/About';
 import { ErrorPage } from './pages/Error';
+import { lazy, Suspense } from 'react';
+const AdminPage = lazy(() => import('./pages/Admin'))
 
 const router = createBrowserRouter([
 
@@ -30,6 +32,18 @@ const router = createBrowserRouter([
             {
                 path: 'about',
                 element: <AboutPage />
+            },
+            {
+                path: 'admin',
+                element: (
+                    <Suspense
+                        fallback={
+                            <p>Loading ...</p>
+                        }
+                    >
+                        <AdminPage />
+                    </Suspense>
+                )
             },
         ]
     },
