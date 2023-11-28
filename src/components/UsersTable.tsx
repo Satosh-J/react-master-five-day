@@ -5,6 +5,7 @@ import UserRow from "./UserRow";
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store/store';
 import { getUsers } from "../api/users";
+import Pagination from "./Pagination";
 
 
 const UsersTable = () => {
@@ -12,6 +13,17 @@ const UsersTable = () => {
   // const { users }: { users: User[] } = useSelector((state: RootState) => state.user)
   const [isLoading, setIsLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Set the desired number of items per page
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+
+
+
   const dispatch = useDispatch()
 
   const handleUserSelect = (user: User) => {
@@ -27,7 +39,6 @@ const UsersTable = () => {
   const handleEdit = (id: ID) => {
     console.log('Edit: ', id)
   }
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   useEffect(() => {
     // Simulating asynchronous data fetching
@@ -68,6 +79,10 @@ const UsersTable = () => {
     };
   }, []);
 
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div>
       <h1>Users</h1>
@@ -92,7 +107,7 @@ const UsersTable = () => {
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user) => (
+              {currentItems.map((user) => (
                 <UserRow
                   onRowSelect={handleUserSelect}
                   key={user.id}
@@ -104,6 +119,12 @@ const UsersTable = () => {
             </tbody>
           </table>
       }
+      <Pagination
+        itemsCount={filteredUsers.length}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
 
     </div>
   );
