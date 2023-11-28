@@ -1,9 +1,10 @@
-import { useUserContext } from "../UserContext";
+import { useSelector } from 'react-redux';
+import { RootState } from "../store/store";
 
 
 const UserProfile = () => {
 
-    const { selectedUser: user } = useUserContext()
+    const { selectedUser: user } = useSelector((state: RootState) => state.user)
 
     if (!user) return null
 

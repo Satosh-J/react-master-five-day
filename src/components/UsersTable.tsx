@@ -2,15 +2,17 @@
 
 import { useState, useEffect } from "react";
 import UserRow from "./UserRow";
-import { useUserContext } from "../UserContext";
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootState } from '../store/store';
 
 
 const UsersTable = () => {
 
-  const { users, dispatch } = useUserContext()
+  const { users }: { users: User[] } = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch()
 
   const handleUserSelect = (user: User) => {
-    dispatch({ type: 'SELECT_USER', user })
+    dispatch({ type: 'SELECT_USER', payload: user })
   }
 
   const [filter, setFilter] = useState('');
