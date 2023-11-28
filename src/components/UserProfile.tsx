@@ -1,10 +1,11 @@
-import { FC } from "react";
+import { useUserContext } from "../UserContext";
 
-interface UserProfileProps {
-    user: User; // Assume UserData is the type for your user data
-}
 
-const UserProfile: FC<UserProfileProps> = ({ user }) => {
+const UserProfile = () => {
+
+    const { selectedUser: user } = useUserContext()
+
+    if (!user) return null
 
     return (
         <section >

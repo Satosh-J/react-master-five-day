@@ -1,15 +1,17 @@
 // UsersTable.tsx
 
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import UserRow from "./UserRow";
-
-interface UsersTableProps {
-  users: User[]
-  onUserSelect: (user: User) => void
-}
+import { useUserContext } from "../UserContext";
 
 
-const UsersTable: FC<UsersTableProps> = ({ users, onUserSelect }) => {
+const UsersTable = () => {
+
+  const { users, dispatch } = useUserContext()
+
+  const handleUserSelect = (user: User) => {
+    dispatch({ type: 'SELECT_USER', user })
+  }
 
   const [filter, setFilter] = useState('');
 
@@ -72,7 +74,7 @@ const UsersTable: FC<UsersTableProps> = ({ users, onUserSelect }) => {
         <tbody>
           {filteredUsers.map((user) => (
             <UserRow
-              onRowSelect={onUserSelect}
+              onRowSelect={handleUserSelect}
               key={user.id}
               user={user}
               onEdit={() => handleEdit(user.id)}
