@@ -4,11 +4,14 @@ import { useState, useEffect } from "react";
 import UserRow from "./UserRow";
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store/store';
+import { getUsers } from "../api/users";
 
 
 const UsersTable = () => {
 
-  const { users }: { users: User[] } = useSelector((state: RootState) => state.user)
+  // const { users }: { users: User[] } = useSelector((state: RootState) => state.user)
+  const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState<User[]>([]);
   const dispatch = useDispatch()
 
   const handleUserSelect = (user: User) => {
@@ -51,6 +54,20 @@ const UsersTable = () => {
     fetchData();
   }, [filter, users]);
 
+  useEffect(() => {
+    let cancel = false;
+
+    getUsers().then((data) => {
+      if (!cancel) {
+        setUsers(data);
+        setIsLoading(false);
+      }
+    });
+    return () => {
+      cancel = true;
+    };
+  }, []);
+
   return (
     <div>
       <h1>Users</h1>
@@ -61,30 +78,33 @@ const UsersTable = () => {
         title="Type in a name"
         onChange={(e) => setFilter(e.target.value)}
       />
+      {
+        isLoading ? <p>Loading...</p> :
+          <table className="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th colSpan={2}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => (
+                <UserRow
+                  onRowSelect={handleUserSelect}
+                  key={user.id}
+                  user={user}
+                  onEdit={() => handleEdit(user.id)}
+                  onDelete={() => handleDelete(user.id)}
+                />
+              ))}
+            </tbody>
+          </table>
+      }
 
-      <table className="table table-striped table-bordered">
-        <thead>
-          <tr>
-            <th>No</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th colSpan={2}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <UserRow
-              onRowSelect={handleUserSelect}
-              key={user.id}
-              user={user}
-              onEdit={() => handleEdit(user.id)}
-              onDelete={() => handleDelete(user.id)}
-            />
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
