@@ -1,26 +1,19 @@
 // UsersTable.tsx
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import UserRow from "./UserRow";
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '../store/store';
-import { fetchPaginatedUsers, getUsers } from "../api/users";
+import { useDispatch } from 'react-redux';
+import { fetchFilteredPaginatedUsers } from "../api/users";
 import Pagination from "./Pagination";
 
 
 const UsersTable = () => {
 
-  // const { users }: { users: User[] } = useSelector((state: RootState) => state.user)
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Set the desired number of items per page
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
   const [totalCount, setTotalCount] = useState(0)
 
 
@@ -41,59 +34,33 @@ const UsersTable = () => {
     console.log('Edit: ', id)
   }
 
-  useEffect(() => {
-    // Simulating asynchronous data fetching
-    const fetchData = async () => {
-      try {
-        // Simulated API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Filtering logic (simulated API response)
-        const filteredData = users.filter((user) => {
-          return Object.values(user).some((value) =>
-            value.toString().toLowerCase().includes(filter.toLowerCase())
-          );
-        });
-
-        // Update state with filtered data
-        setFilteredUsers(filteredData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    // Call fetchData when the filter or users change
-    fetchData();
-  }, [filter, users]);
+  const prevFilterRef = useRef(filter); // useRef to store the previous filter value
 
   useEffect(() => {
     let cancel = false;
+    setIsLoading(true);
 
-    getUsers().then((data) => {
-      if (!cancel) {
-        setUsers(data);
-        setIsLoading(false);
-      }
-    });
-    return () => {
-      cancel = true;
-    };
-  }, []);
+    // Reset currentPage to 1 when the filter changes
+    if (prevFilterRef.current !== filter) {
+      setCurrentPage(1);
+    }
 
-  useEffect(() => {
-    let cancel = false;
-
-    fetchPaginatedUsers(currentPage, itemsPerPage).then((data) => {
+    fetchFilteredPaginatedUsers(filter, currentPage, itemsPerPage).then((data) => {
       if (!cancel) {
         setUsers(data.users);
-        setTotalCount(data.totalCount)
+        setTotalCount(data.totalCount);
         setIsLoading(false);
       }
     });
+
+    // Update the ref with the current filter value after the fetch
+    prevFilterRef.current = filter;
+
     return () => {
       cancel = true;
     };
-  }, [currentPage]);
+  }, [currentPage, filter]);
+
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -102,46 +69,59 @@ const UsersTable = () => {
   return (
     <div>
       <h1>Users</h1>
-      <input type="text"
-        value={filter}
-        className="form-control my-2"
-        placeholder="Search for names.."
-        title="Type in a name"
-        onChange={(e) => setFilter(e.target.value)}
-      />
-      {
-        isLoading ? <p>Loading...</p> :
-          <table className="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>No</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th colSpan={2}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <UserRow
-                  onRowSelect={handleUserSelect}
-                  key={user.id}
-                  user={user}
-                  onEdit={() => handleEdit(user.id)}
-                  onDelete={() => handleDelete(user.id)}
-                />
-              ))}
-            </tbody>
-          </table>
-      }
-      <Pagination
-        itemsCount={totalCount} //New state that stores total count
-        // itemsCount={filteredUsers.length}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+      <div className="container">
+        <div className="row">
+          <div className="col-8">
+            <input type="text"
+              value={filter}
+              className="form-control my-2"
+              placeholder="Search for names.."
+              title="Type in a name"
+              onChange={(e) => setFilter(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="row no-gutters">
+          <div className="col-12">
+            <table className="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th colSpan={2}>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {isLoading && <tr><td colSpan={6} className="text-center">Loading...</td></tr>}
+                {users.length > 0 ? users.map((user) => (
+                  <UserRow
+                    key={user.id}
+                    user={user}
+                    onRowSelect={handleUserSelect}
+                    onEdit={() => handleEdit(user.id)}
+                    onDelete={() => handleDelete(user.id)}
+                  />
+                )) :
+                  <tr><td colSpan={6}>No user found</td></tr>
+                }
+              </tbody>
+            </table>
+            <Pagination
+              itemsCount={totalCount} //New state that stores total count
+              // itemsCount={filteredUsers.length}
+              itemsPerPage={itemsPerPage}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
   );

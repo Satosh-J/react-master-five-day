@@ -6,9 +6,9 @@ export async function getUsers() {
   return body;
 }
 
-// http://localhost:5000/users?_page=1&_limit=10
-export async function fetchPaginatedUsers(pageNumber: number, itemsPerPage: number) {
-  const apiUrl = `http://localhost:5000/users?_page=${pageNumber}&_limit=${itemsPerPage}`;
+// http://localhost:5000/users?q=el&_page=1&_limit=4
+export async function fetchFilteredPaginatedUsers(query: string, pageNumber: number, itemsPerPage: number) {
+  const apiUrl = `http://localhost:5000/users?q=${query}&_page=${pageNumber}&_limit=${itemsPerPage}`;
 
   try {
     const response = await fetch(apiUrl);
@@ -29,4 +29,21 @@ export async function fetchPaginatedUsers(pageNumber: number, itemsPerPage: numb
     console.error('Error fetching paginated users:', error.message);
     throw error; // Re-throw the error for handling at the calling code
   }
+}
+
+export async function saveUser(
+  newUserData: NewUserData
+) {
+  const response = await fetch(
+    'http://localhost:5000/users',
+    {
+      method: 'POST',
+      body: JSON.stringify(newUserData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const body = (await response.json()) as SavedUserData;
+  return { ...newUserData, ...body };
 }

@@ -51,7 +51,7 @@ const Pagination: FC<PaginationProps> = ({ itemsCount, itemsPerPage, currentPage
 
   return (
     <nav>
-      <ul className="pagination">
+      <ul className="pagination justify-content-center">
         {generatePageNumbers().map((number, index) => (
           <li key={index} className={number === currentPage ? 'page-item active' : 'page-item'}>
             {number === '...' ? (
