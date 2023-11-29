@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import UserRow from "./UserRow";
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../store/store';
-import { getUsers } from "../api/users";
+import { fetchPaginatedUsers, getUsers } from "../api/users";
 import Pagination from "./Pagination";
 
 
@@ -21,6 +21,7 @@ const UsersTable = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const [totalCount, setTotalCount] = useState(0)
 
 
 
@@ -79,6 +80,21 @@ const UsersTable = () => {
     };
   }, []);
 
+  useEffect(() => {
+    let cancel = false;
+
+    fetchPaginatedUsers(currentPage, itemsPerPage).then((data) => {
+      if (!cancel) {
+        setUsers(data.users);
+        setTotalCount(data.totalCount)
+        setIsLoading(false);
+      }
+    });
+    return () => {
+      cancel = true;
+    };
+  }, [currentPage]);
+
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
@@ -107,7 +123,7 @@ const UsersTable = () => {
               </tr>
             </thead>
             <tbody>
-              {currentItems.map((user) => (
+              {users.map((user) => (
                 <UserRow
                   onRowSelect={handleUserSelect}
                   key={user.id}
@@ -120,7 +136,8 @@ const UsersTable = () => {
           </table>
       }
       <Pagination
-        itemsCount={filteredUsers.length}
+        itemsCount={totalCount} //New state that stores total count
+        // itemsCount={filteredUsers.length}
         itemsPerPage={itemsPerPage}
         currentPage={currentPage}
         onPageChange={handlePageChange}
