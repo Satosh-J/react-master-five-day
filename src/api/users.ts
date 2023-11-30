@@ -47,3 +47,21 @@ export async function saveUser(
   const body = (await response.json()) as SavedUserData;
   return { ...newUserData, ...body };
 }
+
+
+export async function updateUser(user: User) {
+  const response = await fetch(`http://localhost:5000/users/${user.id}`, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+      throw new Error(`Failed to update user: ${response.statusText}`);
+  }
+
+  const updatedUser: User = await response.json();
+  return updatedUser;
+}

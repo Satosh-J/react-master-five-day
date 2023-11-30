@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import UserRow from "./UserRow";
 import { useDispatch } from 'react-redux';
-import { fetchFilteredPaginatedUsers, saveUser } from "../api/users";
+import { fetchFilteredPaginatedUsers, saveUser, updateUser } from "../api/users";
 import Pagination from "./Pagination";
 import NewUserRow from "./NewUserRow";
 
@@ -32,8 +32,19 @@ const UsersTable = () => {
     console.log('Delete: ', id)
   }
 
-  const handleEdit = (id: ID) => {
-    console.log('Edit: ', id)
+  const handleEdit = async (editedUser: User) => {
+    setIsLoading(true)
+    const updatedUser = await updateUser(editedUser)
+    const updatedUsers = users.map((user: User) => {
+      if (user.id === updatedUser.id) {
+        return {
+          ...user, ...updatedUser
+        }
+      } else return user
+    })
+    setUsers(updatedUsers)
+    setIsNew(false)
+    setIsLoading(false)
   }
 
   const prevFilterRef = useRef(filter); // useRef to store the previous filter value
@@ -121,8 +132,8 @@ const UsersTable = () => {
                         key={user.id}
                         user={user}
                         onRowSelect={handleUserSelect}
-                        onEdit={() => handleEdit(user.id)}
-                        onDelete={() => handleDelete(user.id)}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                       />
                     ))
                   ) : null}
