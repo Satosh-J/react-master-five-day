@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import EditableTableCell from "./EditableCell";
 
-interface UserRowProps {
+interface NewUserRowProps {
   onSave: (newUser: NewUserData) => void;
   onCancel: () => void;
 }
@@ -17,18 +17,11 @@ const newUser = {
   first_name: '',
   last_name: '',
   email: '',
-  ip_address: '',
-  job: '',
   phone: ''
 }
 
-const NewUserRow: FC<UserRowProps> = ({ onSave, onCancel }) => {
+const NewUserRow: FC<NewUserRowProps> = ({ onSave, onCancel }) => {
   const [editedUser, setEditedUser] = useState(newUser);
-
-  const handleSave = () => {
-    // Save changes
-    onSave(editedUser);
-  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Update the edited user when input changes
@@ -36,16 +29,11 @@ const NewUserRow: FC<UserRowProps> = ({ onSave, onCancel }) => {
       ...editedUser,
       [e.target.name]: e.target.value,
     });
-    console.log({
-      editedUser
-    })
   };
 
   return (
-    <tr
-    >
-      <td
-      ></td>
+    <tr>
+      <td />
       {
         editableFields.map((field) => (
           <EditableTableCell
@@ -57,24 +45,18 @@ const NewUserRow: FC<UserRowProps> = ({ onSave, onCancel }) => {
           />
         ))
       }
-      <td
-      >
-        <button onClick={handleSave}
+      <td>
+        <button onClick={() => onSave(editedUser)}
           className="btn btn-success"
-        >
-          Save
-        </button>
+        >Save</button>
       </td>
-      <td
-      >
+      <td>
         <button
           onClick={onCancel}
           className="btn btn-secondary"
-        >
-          Cancel
-        </button>
+        >Cancel</button>
       </td>
-    </tr >
+    </tr>
   );
 };
 

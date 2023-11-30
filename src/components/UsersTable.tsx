@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import UserRow from "./UserRow";
 import { useDispatch } from 'react-redux';
-import { fetchFilteredPaginatedUsers } from "../api/users";
+import { fetchFilteredPaginatedUsers, saveUser } from "../api/users";
 import Pagination from "./Pagination";
+import NewUserRow from "./NewUserRow";
 
 
 const UsersTable = () => {
@@ -14,6 +15,7 @@ const UsersTable = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Set the desired number of items per page
+
   const [totalCount, setTotalCount] = useState(0)
 
 
@@ -66,6 +68,16 @@ const UsersTable = () => {
     setCurrentPage(pageNumber);
   };
 
+  const [isNew, setIsNew] = useState(false)
+  const handleNewUserSave = async (user: NewUserData) => {
+    setIsLoading(true)
+    const newUser = await saveUser(user)
+    setUsers([newUser, ...users])
+    setIsNew(false)
+    setIsLoading(false)
+  }
+
+
   return (
     <div>
       <h1>Users</h1>
@@ -79,6 +91,11 @@ const UsersTable = () => {
               title="Type in a name"
               onChange={(e) => setFilter(e.target.value)}
             />
+          </div>
+          <div className="col-4 d-flex align-items-center justify-content-end">
+            <button className="btn btn-primary"
+              onClick={() => setIsNew(true)}
+            >Add New</button>
           </div>
         </div>
         <div className="row no-gutters">
@@ -96,19 +113,22 @@ const UsersTable = () => {
               </thead>
 
               <tbody>
-                {isLoading && <tr><td colSpan={6} className="text-center">Loading...</td></tr>}
-                {users.length > 0 ? users.map((user) => (
-                  <UserRow
-                    key={user.id}
-                    user={user}
-                    onRowSelect={handleUserSelect}
-                    onEdit={() => handleEdit(user.id)}
-                    onDelete={() => handleDelete(user.id)}
-                  />
-                )) :
-                  <tr><td colSpan={6}>No user found</td></tr>
-                }
+                {isNew && <NewUserRow onCancel={() => setIsNew(false)} onSave={handleNewUserSave} />}
+                {isLoading ? <tr><td colSpan={6}>Loading...</td></tr> :
+                  users.length > 0 ? (
+                    users.map((user) => (
+                      <UserRow
+                        key={user.id}
+                        user={user}
+                        onRowSelect={handleUserSelect}
+                        onEdit={() => handleEdit(user.id)}
+                        onDelete={() => handleDelete(user.id)}
+                      />
+                    ))
+                  ) : null}
+                {!isLoading && users.length === 0 && !isNew && <tr><td colSpan={6}>No user found</td></tr>}
               </tbody>
+
             </table>
             <Pagination
               itemsCount={totalCount} //New state that stores total count

@@ -13,8 +13,6 @@ type NewUserData = {
     last_name: string
     email: string
     phone: string
-    ip_address: string
-    job: string
 }
 
 type SavedUserData = {
