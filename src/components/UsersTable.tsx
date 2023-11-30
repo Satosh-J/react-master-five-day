@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import UserRow from "./UserRow";
 import { useDispatch } from 'react-redux';
-import { fetchFilteredPaginatedUsers, saveUser, updateUser } from "../api/users";
+import { deleteUser, fetchFilteredPaginatedUsers, saveUser, updateUser } from "../api/users";
 import Pagination from "./Pagination";
 import NewUserRow from "./NewUserRow";
 
@@ -28,8 +28,15 @@ const UsersTable = () => {
 
   const [filter, setFilter] = useState('');
 
-  const handleDelete = (id: ID) => {
-    console.log('Delete: ', id)
+  const handleDelete = async (id: ID) => {
+    setIsLoading(true)
+    const success = await deleteUser(id)
+    if (success) {
+      const updatedUsers = users.filter(item => item.id !== id)
+      setUsers(updatedUsers)
+    }
+    setIsNew(false)
+    setIsLoading(false)
   }
 
   const handleEdit = async (editedUser: User) => {

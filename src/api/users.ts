@@ -51,17 +51,29 @@ export async function saveUser(
 
 export async function updateUser(user: User) {
   const response = await fetch(`http://localhost:5000/users/${user.id}`, {
-      method: 'PUT',
-      headers: {
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(user),
   });
 
   if (!response.ok) {
-      throw new Error(`Failed to update user: ${response.statusText}`);
+    throw new Error(`Failed to update user: ${response.statusText}`);
   }
 
   const updatedUser: User = await response.json();
   return updatedUser;
+}
+
+export async function deleteUser(id: ID) {
+  const response = await fetch(`http://localhost:5000/users/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to delete user: ${response.statusText}`);
+  }
+
+  return true;
 }
