@@ -83,11 +83,11 @@ function* dispatchPending(actionType: string, action: Action, payload: any): any
 }
 
 // Generator function to dispatch a fulfilled action
-function* dispatchFulfilled(action: Action, response: any): any {
+function* dispatchFulfilled(action: Action, response: AxiosResponse): any {
     yield put({
         type: `${action.payload.action}_FULFILLED`,
         actualAction: action,
-        payload: { data: response.data }
+        payload: { data: response.data, headers: response.headers }
     });
 }
 
@@ -113,6 +113,9 @@ function* invokeAPI(action: Action): any {
 
         switch (method) {
             case apiType.GET: {
+                console.log({
+                    actionType, url
+                })
 
                 if (similarPendingRequestExist(actionType, url)) {
                     throw new Error(
@@ -156,6 +159,7 @@ function* invokeAPI(action: Action): any {
         // Remove the pending request information
         delete pendingRequests[actionType];
     } catch (error: any) {
+        console.log({ error })
         // If the error is not due to a similar request existing, remove the pending request information
         if (error.cause !== ALREADY_EXISTS) {
             delete pendingRequests[actionType];
