@@ -27,26 +27,13 @@ const UsersTable = () => {
 
   const [filter, setFilter] = useState('');
 
-  const handleDelete = async (id: ID) => {
-    const success = await deleteUser(id)
-    if (success) {
-      // const updatedUsers = users.filter(item => item.id !== id)
-      // setUsers(updatedUsers)
-    }
-    setIsNew(false)
+  const handleDelete = (id: ID) => {
+    dispatch(deleteUser(id))
+
   }
 
-  const handleEdit = async (editedUser: User) => {
-    const updatedUser = await updateUser(editedUser)
-    const updatedUsers = users.map((user: User) => {
-      if (user.id === updatedUser.id) {
-        return {
-          ...user, ...updatedUser
-        }
-      } else return user
-    })
-    // setUsers(updatedUsers)
-    setIsNew(false)
+  const handleEdit = (editedUser: User) => {
+    dispatch(updateUser(editedUser))
   }
 
   const prevFilterRef = useRef(filter); // useRef to store the previous filter value
@@ -78,9 +65,8 @@ const UsersTable = () => {
   };
 
   const [isNew, setIsNew] = useState(false)
-  const handleNewUserSave = async (user: NewUserData) => {
-    const newUser = await saveUser(user)
-    // setUsers([newUser, ...users])
+  const handleNewUserSave = (user: NewUserData) => {
+    dispatch(saveUser(user))
     setIsNew(false)
   }
 

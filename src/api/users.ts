@@ -1,4 +1,4 @@
-import { GET_USERS } from "../store/actions";
+import { DELETE_USER, GET_USERS, SAVE_USER, UPDATE_USER } from "../store/actions";
 
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
@@ -27,49 +27,44 @@ export function fetchFilteredPaginatedUsers(query: string, pageNumber: number, i
   return { type: 'API_INVOCATION', payload };
 }
 
-export async function saveUser(
+
+export function saveUser(
   newUserData: NewUserData
 ) {
-  const response = await fetch(
-    'http://localhost:5000/users',
-    {
-      method: 'POST',
-      body: JSON.stringify(newUserData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
-  const body = (await response.json()) as SavedUserData;
-  return { ...newUserData, ...body };
+  const apiUrl = `${BASE_API_URL}/users`;
+
+  const payload = {
+    action: SAVE_USER,
+    method: 'POST',
+    url: apiUrl,
+    data: newUserData
+  };
+  return { type: 'API_INVOCATION', payload };
 }
 
 
-export async function updateUser(user: User) {
-  const response = await fetch(`http://localhost:5000/users/${user.id}`, {
+
+export function updateUser(user: User) {
+  const apiUrl = `${BASE_API_URL}/users/${user.id}`;
+
+  const payload = {
+    action: UPDATE_USER,
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(user),
-  });
+    url: apiUrl,
+    data: user
+  };
+  return { type: 'API_INVOCATION', payload };
 
-  if (!response.ok) {
-    throw new Error(`Failed to update user: ${response.statusText}`);
-  }
-
-  const updatedUser: User = await response.json();
-  return updatedUser;
 }
 
-export async function deleteUser(id: ID) {
-  const response = await fetch(`http://localhost:5000/users/${id}`, {
+export function deleteUser(id: ID) {
+  const apiUrl = `${BASE_API_URL}/users/${id}`;
+
+  const payload = {
+    action: DELETE_USER,
     method: 'DELETE',
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to delete user: ${response.statusText}`);
-  }
-
-  return true;
+    url: apiUrl,
+    data: id
+  };
+  return { type: 'API_INVOCATION', payload };
 }

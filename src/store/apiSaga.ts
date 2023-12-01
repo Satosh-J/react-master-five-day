@@ -113,9 +113,6 @@ function* invokeAPI(action: Action): any {
 
         switch (method) {
             case apiType.GET: {
-                console.log({
-                    actionType, url
-                })
 
                 if (similarPendingRequestExist(actionType, url)) {
                     throw new Error(
