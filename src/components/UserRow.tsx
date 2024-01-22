@@ -3,8 +3,9 @@ import EditableTableCell from "./EditableCell";
 
 interface UserRowProps {
     user: User; // Assume UserData is the type for your user data
-    onEdit: (userId: ID, updatedUser: User) => void;
+    onEdit: (updatedUser: User) => void;
     onDelete: (userId: ID) => void;
+    onRowSelect: (user: User) => void
 }
 
 const editableFields = [
@@ -14,14 +15,14 @@ const editableFields = [
     'phone',
 ]
 
-const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
+const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete, onRowSelect }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editedUser, setEditedUser] = useState({ ...user });
 
     const handleEdit = () => {
         if (isEditing) {
             // Save changes
-            onEdit(user.id, editedUser);
+            onEdit(editedUser);
         } else {
             // Start editing
             setIsEditing(true);
@@ -36,7 +37,10 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
 
     const handleSave = () => {
         // Save changes
-        onEdit(user.id, editedUser);
+        console.log({
+            user: editedUser
+        })
+        onEdit(editedUser);
         setIsEditing(false);
     };
 
@@ -48,11 +52,17 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
         });
     };
 
+    const handleRowClicked = () => {
+        onRowSelect(user)
+    }
 
 
     return (
-        <tr key={user.id}>
-            <td>{user.id}</td>
+        <tr key={user.id}
+            onClick={handleRowClicked}
+        >
+            <td
+            >{user.id}</td>
             {editableFields.map((field) => (
                 <EditableTableCell
                     key={field}
@@ -62,22 +72,32 @@ const UserRow: FC<UserRowProps> = ({ user, onEdit, onDelete }) => {
                     value={editedUser[field as keyof object]}
                 />
             ))}
-            <td>
+            <td
+            >
                 {
                     isEditing ?
-                        <button onClick={handleCancel}>
+                        <button onClick={handleCancel}
+                            className="btn btn-secondary"
+                        >
                             Cancel
                         </button> :
-                        <button onClick={handleEdit}>
+                        <button
+                            className="btn btn-primary"
+                            onClick={handleEdit}>
                             Edit
                         </button>
                 }
             </td>
-            <td>
+            <td
+            >
                 {
                     isEditing ?
-                        <button onClick={handleSave}>Save</button> :
-                        <button onClick={() => onDelete(user.id)}>Delete</button>
+                        <button onClick={handleSave}
+                            className="btn btn-primary"
+                        >Save</button> :
+                        <button onClick={() => onDelete(user.id)}
+                            className="btn btn-danger"
+                        >Delete</button>
                 }
             </td>
         </tr >
